@@ -15,7 +15,15 @@ export const getIngredients = async (req:Request) => {
 
 export const getRecipe = async (req:Request) => {
     try {
-        const recipes =  await RecipeIngredientsModal.getFilteredRecipes()
+        const { difficulty, rating, isFavorite, cuisine } = req.query;
+        const recipes =  await RecipeIngredientsModal.getFilteredRecipes(
+            {
+                difficulty: difficulty ? Number(difficulty) : undefined, // Convert to number if present
+                rating: rating ? Number(rating) : undefined,             // Convert to number if present
+                isFavorite: isFavorite === 'true',                       // Convert to boolean
+                cuisine: cuisine || undefined                            // Pass string directly
+              }
+        )
         return recipes
       } catch (error) {
         throw error;
