@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { IngredinetsModal } from 'src/models/IngredinetsModal';
 import { RecipeIngredientsModal } from 'src/models/RecipeIngredientsModal';
-
+import { errors } from 'src/lib/error';
 
 
 export const getIngredients = async (req:Request) => {
@@ -37,4 +37,24 @@ export const getTrendingRecipes = async () =>{
       } catch (error) {
         throw error;
       }
+}
+
+export const getRecipeByid = async (req) =>{
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      throw new Error("Recipe ID is required.");
+    }
+
+    const recipe = await RecipeIngredientsModal.getRecipeDetailsById(Number(id));
+
+    if (!recipe) {
+       throw errors.DETAILS_NOT_FOUND();
+    }
+
+    return recipe;
+  } catch (error) {
+    throw error;
+  }
 }
