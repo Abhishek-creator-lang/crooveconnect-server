@@ -14,15 +14,18 @@ export class RecipeIngredientsModal extends Model {
     return database(this.tableName);
   }
 
- public static async  getFilteredRecipes(filters) {
+  public static async getFilteredRecipes(filters) {
     // Start building the query
     const {
       difficulty,
       rating,
       isFavorite,
       cuisine,
-    } = filters || {}
-    const query = this.recipeTable.join('recipe_ingredients', 'recipes.id', '=', 'recipe_ingredients.recipe_id')
+      ingredients, // List of ingredient IDs or names to filter recipes
+    } = filters || {};
+  
+    const query = this.recipeTable
+      .join('recipe_ingredients', 'recipes.id', '=', 'recipe_ingredients.recipe_id')
       .join('ingredients', 'recipe_ingredients.ingredient_id', '=', 'ingredients.id')
       .join('ingredient_categories', 'ingredients.category_id', '=', 'ingredient_categories.id')
       .leftJoin('user_feedback', 'recipes.id', '=', 'user_feedback.recipe_id') // For rating and favorites
@@ -52,12 +55,17 @@ export class RecipeIngredientsModal extends Model {
       query.where('user_feedback.rating', '>=', rating);
     }
   
-    if (isFavorite !== undefined) {
+    if (isFavorite) {
       query.where('user_feedback.is_favorite', isFavorite);
     }
   
     if (cuisine) {
       query.where('recipes.cuisine', 'like', `%${cuisine}%`);
+    }
+  
+    // Filter recipes by ingredients
+    if (ingredients && ingredients.length > 0) {
+      query.whereIn('ingredients.id', ingredients); // Match recipes using specific ingredient IDs
     }
   
     // Execute the query
@@ -113,7 +121,7 @@ export class RecipeIngredientsModal extends Model {
     // Convert the result object into an array
     return Object.values(groupedRecipes);
   }
-
+  
   public static async  getTrendingRecipes(limit = 10) {
     const query = this.recipeTable
       .leftJoin('user_feedback', 'recipes.id', '=', 'user_feedback.recipe_id')
