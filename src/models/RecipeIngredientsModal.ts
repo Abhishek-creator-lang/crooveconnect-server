@@ -137,4 +137,27 @@ export class RecipeIngredientsModal extends Model {
   
     return trendingRecipes;
   }
+
+  static async getRecipeDetailsById(id: number) {
+    const recipe = await this.recipeTable
+      .leftJoin('recipe_ingredients', 'recipes.id', 'recipe_ingredients.recipe_id')
+      .leftJoin('ingredients', 'recipe_ingredients.ingredient_id', 'ingredients.id')
+      .leftJoin('ingredient_categories', 'ingredients.category_id', 'ingredient_categories.id')
+      .select(
+        'recipes.id',
+        'recipes.name',
+        'recipes.description',
+        'recipes.instructions',
+        'recipes.difficulty',
+        'recipes.cooking_time',
+        'recipes.cuisine',
+        database.raw("json_agg(json_build_object('name', ingredients.name, 'category', ingredient_categories.name, 'quantity', recipe_ingredients.quantity)) as ingredients")
+      )
+      .where('recipes.id', id)
+      .groupBy('recipes.id')
+      .first(); // Retrieve only one record
+
+    return recipe;
+  }
+
 }
