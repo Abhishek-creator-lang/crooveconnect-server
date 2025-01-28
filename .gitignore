@@ -2,7 +2,7 @@
 /.idea/
 /node_modules/
 .DS_Store
-/dist
+
 
 # Logs
 logs

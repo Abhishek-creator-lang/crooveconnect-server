@@ -4,13 +4,17 @@
   "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node dist/bundle.js",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "start": "npm run build && cross-env NODE_ENV=development node dist/bundle.js",
+    "build": "cross-env NODE_ENV=development webpack --config webpack.config.js",
     "dev": "cross-env NODE_ENV=development && npm-run-all -p dev:*",
     "dev:build": "webpack --config webpack.config.js --watch",
     "dev:start": "nodemon --watch dist --exec node dist/bundle.js",
-    "test": "NODE_ENV=test jest --config ./jest.config.js"
+    "test": "NODE_ENV=test jest --config ./jest.config.js",
+    "build-and-start": "npm run build && npm run start"
   },
+  "keywords": [
+    "heroku"
+  ],
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",

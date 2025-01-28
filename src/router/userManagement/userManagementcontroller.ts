@@ -41,7 +41,7 @@ export const loginUser = async payload => {
   }
 };
 
-export const getUserDetail = async email => {
+export const getUserDetail = async (email:any) => {
   try {
     const userDetails = await UserModel.findByEmail(email);
     return userDetails;

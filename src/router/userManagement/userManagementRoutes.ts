@@ -32,8 +32,9 @@ userRouter.get(
   '/get-profile',
   asyncHandler(authenticateToken),
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const data = await getUserDetail(req?.email);
-    delete data.password;
+    // const { email = '' } = req 
+    const data = await getUserDetail('');
+    data.password = '';
     res.status(200).json({ data });
   })
 );

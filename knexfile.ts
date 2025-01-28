@@ -4,7 +4,7 @@ import type { Knex } from 'knex';
 
 const environments: string[] = ['development', 'staging', 'production'];
 
-const connection: Knex.ConnectionConfig = {
+const connection: any = {
   port: 5432,
   host: process.env.DB_HOST as string,
   database: process.env.DB_NAME as string,
