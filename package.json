@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "npm run build && cross-env NODE_ENV=development node dist/bundle.js",
+    "start": "cross-env NODE_ENV=development node dist/bundle.js",
     "build": "cross-env NODE_ENV=development webpack --config webpack.config.js",
     "dev": "cross-env NODE_ENV=development && npm-run-all -p dev:*",
     "dev:build": "webpack --config webpack.config.js --watch",
